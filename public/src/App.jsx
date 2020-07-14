@@ -1,5 +1,6 @@
 import React, { component } from "react";
 import ReactDOM from "react-dom";
+const insertRow = require('./db/index.js');
 
 class App extends React.Component {
   constructor() {
