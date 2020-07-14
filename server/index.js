@@ -9,9 +9,8 @@ const app = express();
 
 
 app.use(express.static(path.join(__dirname, '../public/dist')));
-app.use('/scripts', express.static(path.join(__dirname, '../node_modules/react/dist/')));
-app.use('/scripts', express.static(path.join(__dirname, '../node_modules/react-dom/dist/')));
-
+app.use('/scripts', express.static(path.join(__dirname, '/node_modules/react/dist/')));
+app.use('/scripts', express.static(path.join(__dirname, '/node_modules/react-dom/dist/')));
 
 
 

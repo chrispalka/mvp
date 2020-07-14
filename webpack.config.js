@@ -3,7 +3,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const path = require('path');
 
 module.exports = {
-  entry: './compiled/public/src/app.js',
+  entry: './compiled/public/src/index.js',
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'public/dist'),
@@ -15,7 +15,6 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: "Webpack Output",
       template: './public/src/index.html',
       filename: 'index.html'
     }),
@@ -31,6 +30,19 @@ module.exports = {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader'
+        }
+      },
+      {
+        test: /\.html$/,
+        use: {
+          loader: 'html-loader'
+        }
+      }
     ]
   }
 }

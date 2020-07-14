@@ -1,7 +1,10 @@
-class App extends React.component {
+import React, { component } from "react";
+import ReactDOM from "react-dom";
+
+class App extends React.Component {
   constructor() {
     super()
-    this.state = {};
+    this.state = {}
   }
 
 
@@ -9,7 +12,9 @@ class App extends React.component {
 
   render() {
     return(
-      <h1>hi</h1>
+      <h1>hello from app</h1>
     )
   }
 }
+
+export default App;
