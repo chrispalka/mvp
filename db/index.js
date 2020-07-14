@@ -1,10 +1,10 @@
 const database = 'sneakers';
 const mysql      = require('mysql');
 const connection = mysql.createConnection({
-  host    :  process.ENV.host || 'localhost',
+  host    : 'localhost',
   user    : 'root',
-  password: 'password'
-  database:  database,
+  password: '',
+  database: database,
 });
 
 connection.connect();
