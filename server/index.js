@@ -3,17 +3,48 @@ const port = process.env.PORT || 3000;
 const host = process.env.HOST || 'http://localhost'
 const path = require ('path');
 const fs = require ('fs');
+const multer = require('multer')
+const upload = multer({})
+const headers = require('../cors.json')
+const { insertRow } = require('../db/index.js')
+const stockxAPI = require('stockx-api');
+const stockX = new stockxAPI();
 
 
 const app = express();
 
 
 app.use(express.static(path.join(__dirname, '../public/dist')));
-app.use('/scripts', express.static(path.join(__dirname, '/node_modules/react/dist/')));
-app.use('/scripts', express.static(path.join(__dirname, '/node_modules/react-dom/dist/')));
+
+app.post('/submit', upload.none(), (req, res) => {
+  if (req.body.username) {
+    insertRow(`INSERT INTO users (username) VALUES ('${req.body.username}')`);
+  }
+  res.set(headers);
+  res.sendStatus(200);
+});
+
+app.post('/search', upload.none(), (req, res) => {
+  let search = req.body.search;
+  (async () => {
+    try {
+        const productList = await stockX.newSearchProducts(search, {
+          limit: 5
+        });
+        //Fetch variants and product details of the first product
+        // const product = await stockX.fetchProductDetails(productList[0]);
+        console.log(productList)
+    }
+    catch(e){
+        console.log('Error: ' + e.message);
+    }
+})();
 
 
 
+  res.set(headers);
+  res.sendStatus(200);
+});
 
 
 
@@ -25,4 +56,4 @@ app.use('/scripts', express.static(path.join(__dirname, '/node_modules/react-dom
 
 app.listen(port, () => {
   console.log(`Express server listening on ${host}:${port}`)
-})
+});

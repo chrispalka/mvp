@@ -10,7 +10,7 @@ const connection = mysql.createConnection({
 connection.connect();
 
 
-var insertRow = function(callback) {
+var insertRow = function(query) {
   connection.query(query, (err) => {
     if (err) {
       console.log('Error querying database: ', err)

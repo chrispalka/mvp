@@ -4,17 +4,22 @@
   "description": "",
   "private": true,
   "scripts": {
-    "watch": "babel . --watch --out-dir compiled --presets=react --ignore=node_modules,compiled --source-maps inline",
-    "build": "babel . --out-dir compiled --presets=react --ignore=node_modules,compiled --source-maps inline",
+    "watch": "babel . --watch --out-dir compiled --ignore=node_modules,compiled --source-maps inline",
+    "build": "babel . --out-dir compiled --ignore=node_modules,compiled --source-maps inline",
     "react-dev": "webpack -d --watch",
     "server-dev": "nodemon server/index.js"
   },
   "author": "Beth Johnson",
   "license": "ISC",
   "devDependencies": {
+    "@babel/cli": "^7.10.4",
     "@babel/core": "^7.10.4",
+    "@babel/node": "^7.10.4",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-transform-arrow-functions": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
     "@babel/preset-react": "^7.10.4",
+    "@babel/register": "^7.10.4",
     "babel-loader": "^8.1.0",
     "copy-webpack-plugin": "^6.0.3",
     "html-loader": "^1.1.0",
@@ -26,10 +31,15 @@
   },
   "dependencies": {
     "body-parser": "^1.17.2",
+    "bootstrap": "^4.5.0",
+    "css-loader": "^3.6.0",
     "express": "^4.15.0",
-    "jquery": "^3.1.1",
+    "jquery": "^3.5.1",
+    "multer": "^1.4.2",
     "mysql": "^2.13.0",
+    "popper.js": "^1.16.1",
     "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "react-dom": "^15.4.2",
+    "style-loader": "^1.2.1"
   }
 }

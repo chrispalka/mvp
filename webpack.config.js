@@ -1,12 +1,15 @@
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
+const SRC_DIR = path.join(__dirname, '/public/src');
+const DIST_DIR = path.join(__dirname, '/public/dist');
 
 module.exports = {
-  entry: './compiled/public/src/index.js',
+  entry: `${SRC_DIR}/index.js`,
   output: {
     filename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'public/dist'),
+    path: DIST_DIR
   },
   node: {
     fs: 'empty',
@@ -22,6 +25,12 @@ module.exports = {
       patterns: [
           {from: './assets', to: 'assets'}
       ]
+    }),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery',
+      Popper: ['popper.js', 'default']
     })
   ],
   module: {
