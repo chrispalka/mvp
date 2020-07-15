@@ -25,6 +25,10 @@ class Main extends React.Component {
       method: 'POST',
       body: data
     })
+    .then(res => res.json())
+    .then(data => {
+      console.log('Result! ', data)
+    })
   }
 
 

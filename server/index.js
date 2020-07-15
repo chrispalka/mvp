@@ -26,24 +26,21 @@ app.post('/submit', upload.none(), (req, res) => {
 
 app.post('/search', upload.none(), (req, res) => {
   let search = req.body.search;
+
   (async () => {
     try {
         const productList = await stockX.newSearchProducts(search, {
-          limit: 5
+          limit: 1
         });
         //Fetch variants and product details of the first product
         // const product = await stockX.fetchProductDetails(productList[0]);
-        console.log(productList)
+      res.set(headers);
+      res.status(200).json({ productList })
     }
     catch(e){
         console.log('Error: ' + e.message);
     }
 })();
-
-
-
-  res.set(headers);
-  res.sendStatus(200);
 });
 
 
