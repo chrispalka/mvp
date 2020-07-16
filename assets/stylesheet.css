@@ -10,3 +10,12 @@ body {
   margin-top: 50%;
   margin-bottom: 50%;
 }
+
+.hover:hover::after{
+  background-color: #E0F2E9;
+}
+.hover:hover td{
+  transform: scale(1.1);
+  -webkit-filter: drop-shadow(0 20px 20px  rgba(0, 0, 0, 0.70));
+  filter: drop-shadow(0 20px 20px rgba(0, 0, 0, 0.70));
+}

@@ -30,10 +30,9 @@ app.post('/search', upload.none(), (req, res) => {
   (async () => {
     try {
         const productList = await stockX.newSearchProducts(search, {
-          limit: 1
+          limit: 5
         });
-        //Fetch variants and product details of the first product
-        // const product = await stockX.fetchProductDetails(productList[0]);
+
       res.set(headers);
       res.status(200).json({ productList })
     }

@@ -1,12 +1,15 @@
 import React, { component } from "react";
+import ListEntry from './ListEntry.jsx'
 
 const List = (props) => (
-  <tr>
-    <th scope="col"></th>
-    <th scope="col">Name</th>
-    <th scope="col">Size</th>
-    <th scope="col">Highest Bid</th>
-  </tr>
+  <tbody>
+    {props.results.map((x, key) =>
+      // console.log(x.name)
+      <ListEntry name={x.name} highestbid={x.highest_bid} lastsale={x.last_sale} media={x.media} key={key} />
+    )}
+  </tbody>
 )
 
 export default List;
+
+
