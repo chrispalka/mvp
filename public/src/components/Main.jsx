@@ -8,7 +8,8 @@ class Main extends React.Component {
     super(props)
     this.state = {
       search: '',
-      results: []
+      results: [],
+      favoriteClicked: false
     }
   }
 
@@ -42,6 +43,10 @@ class Main extends React.Component {
       })
   }
 
+  handleFavorite = (e) => {
+    console.log('Hi from favorites!')
+    this.setState({favoriteClicked: true});
+  }
 
 
   render() {
@@ -68,7 +73,7 @@ class Main extends React.Component {
               <th scope="col">Last Sale</th>
             </tr>
           </thead>
-            <List results={this.state.results} />
+            <List results={this.state.results} favoriteClicked={this.state.favoriteClicked} favorites={this.handleFavorite} />
         </table>
       </div>
     )
