@@ -9,7 +9,9 @@ class Main extends React.Component {
     this.state = {
       search: '',
       results: [],
-      favoriteClicked: false
+      favoriteClicked: {
+        
+      }
     }
   }
 
@@ -43,9 +45,12 @@ class Main extends React.Component {
       })
   }
 
-  handleFavorite = (e) => {
+  handleFavorite = (key) => {
+    console.log('key! ', key)
     console.log('Hi from favorites!')
-    this.setState({favoriteClicked: true});
+    this.setState(state => ( {
+      favoriteClicked: !state.favoriteClicked
+    }))
   }
 
 
@@ -67,6 +72,7 @@ class Main extends React.Component {
         <table className="table table-striped table-dark">
           <thead>
             <tr>
+              <th scope="col"></th>
               <th scope="col"></th>
               <th scope="col">Name</th>
               <th scope="col">Highest Bid</th>

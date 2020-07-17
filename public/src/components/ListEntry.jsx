@@ -1,12 +1,16 @@
 import React, { component } from "react";
-// import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { faStar } from "@fortawesome/free-regular-svg-icons";
+import { fas } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faStar } from "@fortawesome/free-regular-svg-icons";
+library.add(fas)
 
 const ListEntry = (props) => (
   <tr className="hover">
     <td className="star">
-    <FontAwesomeIcon icon={faStar} onClick={props.favorites} />
+      <input checked={true}>
+    <FontAwesomeIcon icon={ checked ? ['fas', 'star'] : faStar } onClick={() => props.favorites(props.name)} />
+      </input>
       </td>
     <td><img height='50' src={props.media.thumbUrl}></img></td>
     <td>{props.name}</td>
