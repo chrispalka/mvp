@@ -9,8 +9,8 @@ class Main extends React.Component {
     this.state = {
       search: '',
       results: [],
-      favoriteClicked: {
-        
+      favorites: {
+
       }
     }
   }
@@ -45,12 +45,20 @@ class Main extends React.Component {
       })
   }
 
-  handleFavorite = (key) => {
-    console.log('key! ', key)
+  handleFavorite = (favorite) => {
+    console.log('key! ', favorite)
     console.log('Hi from favorites!')
-    this.setState(state => ( {
-      favoriteClicked: !state.favoriteClicked
-    }))
+    const store = this.state.favorites;
+    if (store[favorite] === undefined || store[favorite] === false) {
+      store[favorite] = true;
+      this.setState(store);
+    } else {
+      store[favorite] = false;
+      this.setState(store)
+    }
+    // this.setState(state => ( {
+    //   favorites: {favorite: true}
+    // }))
   }
 
 
@@ -79,7 +87,7 @@ class Main extends React.Component {
               <th scope="col">Last Sale</th>
             </tr>
           </thead>
-            <List results={this.state.results} favoriteClicked={this.state.favoriteClicked} favorites={this.handleFavorite} />
+            <List results={this.state.results} favoriteClicked={this.state.favorites} favorites={this.handleFavorite} />
         </table>
       </div>
     )

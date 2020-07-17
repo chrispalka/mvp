@@ -8,9 +8,7 @@ library.add(fas)
 const ListEntry = (props) => (
   <tr className="hover">
     <td className="star">
-      <input checked={true}>
-    <FontAwesomeIcon icon={ checked ? ['fas', 'star'] : faStar } onClick={() => props.favorites(props.name)} />
-      </input>
+    <FontAwesomeIcon icon={ props.favoriteClicked[props.name] ? ['fas', 'star'] : faStar } onClick={() => props.favorites(props.name)} />
       </td>
     <td><img height='50' src={props.media.thumbUrl}></img></td>
     <td>{props.name}</td>
