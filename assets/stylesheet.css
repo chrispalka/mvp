@@ -23,3 +23,11 @@ body {
 .td {
   padding-top: 25px;
 }
+
+.favorite {
+  padding: 5px;
+}
+
+.favorite:hover {
+  background-color: ivory;
+}

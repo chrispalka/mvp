@@ -10,15 +10,17 @@ const connection = mysql.createConnection({
 connection.connect();
 
 
-var insertRow = function(query) {
-  connection.query(query, (err) => {
+var insertRow = function(query, callback) {
+  connection.query(query, (err, result) => {
     if (err) {
       console.log('Error querying database: ', err)
     } else {
       console.log('Query fulfilled!');
+      return callback(result)
     }
   });
 }
+
 
 module.exports = {
   insertRow: insertRow

@@ -1,6 +1,9 @@
 import React, { component } from "react";
 import ReactDOM from "react-dom";
 import List from './List.jsx';
+import Favorites from './Favorites.jsx'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 
 
 class Main extends React.Component {
@@ -9,9 +12,8 @@ class Main extends React.Component {
     this.state = {
       search: '',
       results: [],
-      favorites: {
-
-      }
+      favorites: {},
+      favoriteView: false
     }
   }
 
@@ -20,7 +22,6 @@ class Main extends React.Component {
     store[e.target.name] = e.target.value;
     this.setState(store);
   }
-
 
 
   handleSearch = (e) => {
@@ -36,29 +37,51 @@ class Main extends React.Component {
       .then(data => {
         const result = [];
         const dataObj = {};
-        console.log(data.productList)
         data = data.productList
         data.forEach((x) => {
-          result.push((({ name, highest_bid, last_sale, media }) => ({ name, highest_bid, last_sale, media }))(x))
+          result.push((({ name, url, highest_bid, last_sale, media }) => ({ name, url, highest_bid, last_sale, media }))(x))
         })
         this.setState({ results: result })
       })
   }
 
   handleFavorite = (favorite) => {
-    console.log('key! ', favorite)
-    console.log('Hi from favorites!')
+    const data = new FormData();
     const store = this.state.favorites;
-    if (store[favorite] === undefined || store[favorite] === false) {
-      store[favorite] = true;
+    if (store[favorite[0]] === undefined || store[favorite[0]].status === false) {
+      store[favorite[0]] = {
+        status: true,
+        highestBid: favorite[1],
+        lastSale: favorite[2],
+        url: favorite[3],
+        media: favorite[4],
+        username: this.props.username
+      };
       this.setState(store);
     } else {
-      store[favorite] = false;
-      this.setState(store)
+      store[favorite[0]].status = false;
+      this.setState(store);
     }
-    // this.setState(state => ( {
-    //   favorites: {favorite: true}
-    // }))
+    data.append('name', favorite[0])
+    for (var k in store[favorite[0]]) {
+      data.append(k, store[favorite[0]][k])
+    }
+    fetch('/favorite', {
+      method: 'POST',
+      body: data
+    })
+  }
+
+  renderFavorites = () => {
+
+    // place a get request for favorite data
+    // in server conditional in favorite endpoint if GET
+        // to query DB based on current user, send back data via JSON/promise
+        // pass data as props down to Favorites
+         // iterate over props and render into FavoritesEntry
+    this.setState(state => ({
+      favoriteView: !this.state.favoriteView
+    }));
   }
 
 
@@ -69,28 +92,55 @@ class Main extends React.Component {
     } else {
       h1 = <h1>Welcome back {this.props.username}!</h1>
     }
-    return (
-      <div className="container">
-        {h1}
-        <form onSubmit={this.handleSearch}>
-          <div className="form-group">
-            <input type="text" className="form-control" name="search" value={this.state.search} onChange={this.onChange} placeholder="Lets find some sneakers!"></input>
-          </div>
-        </form>
-        <table className="table table-striped table-dark">
-          <thead>
-            <tr>
-              <th scope="col"></th>
-              <th scope="col"></th>
-              <th scope="col">Name</th>
-              <th scope="col">Highest Bid</th>
-              <th scope="col">Last Sale</th>
-            </tr>
-          </thead>
-            <List results={this.state.results} favoriteClicked={this.state.favorites} favorites={this.handleFavorite} />
-        </table>
-      </div>
-    )
+    if (!this.state.favoriteView) {
+      return (
+        <div className="container">
+          {h1}
+          <span className="favorite"><FontAwesomeIcon icon={faStar} onClick={this.renderFavorites} /></span>
+          <form onSubmit={this.handleSearch}>
+            <div className="form-group">
+              <input type="text" className="form-control" name="search" value={this.state.search} onChange={this.onChange} placeholder="Lets find some sneakers!"></input>
+            </div>
+          </form>
+          <table className="table table-striped table-dark">
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col">Name</th>
+                <th scope="col">Highest Bid</th>
+                <th scope="col">Last Sale</th>
+              </tr>
+            </thead>
+              <List results={this.state.results} favoriteClicked={this.state.favorites} favorites={this.handleFavorite} />
+          </table>
+        </div>
+      )
+    } else {
+      return (
+        <div className="container">
+          {h1}
+          <span className="favorite"><FontAwesomeIcon icon={faStar} onClick={this.renderFavorites} /></span>
+          <form onSubmit={this.handleSearch}>
+            <div className="form-group">
+              <input type="text" className="form-control" name="search" value={this.state.search} onChange={this.onChange} placeholder="Lets find some sneakers!"></input>
+            </div>
+          </form>
+          <table className="table table-striped table-dark">
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col">Name</th>
+                <th scope="col">Highest Bid</th>
+                <th scope="col">Last Sale</th>
+              </tr>
+            </thead>
+              <Favorites />
+          </table>
+        </div>
+      )
+    }
   }
 }
 

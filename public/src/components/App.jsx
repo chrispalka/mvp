@@ -21,7 +21,7 @@ class App extends React.Component {
     e.preventDefault()
     const data = new FormData();
     data.append('username', this.state.username)
-    fetch('/submit', {
+    fetch('/login', {
       method: 'POST',
       body: data
     })
@@ -31,7 +31,7 @@ class App extends React.Component {
   }
 
   render() {
-    if(this.state.loginComplete) {
+    if(!this.state.loginComplete) {
       return (
         <div className="container">
           <form className="login" onSubmit={this.handleSubmit}>

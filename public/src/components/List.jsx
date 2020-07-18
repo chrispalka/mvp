@@ -4,7 +4,7 @@ import ListEntry from './ListEntry.jsx'
 const List = (props) => (
   <tbody>
     {props.results.map((x, key) =>
-      <ListEntry name={x.name} highestbid={x.highest_bid} lastsale={x.last_sale} media={x.media} key={key} favoriteClicked={props.favoriteClicked} favorites={props.favorites} />
+      <ListEntry name={x.name} highestBid={x.highest_bid} lastSale={x.last_sale} media={x.media} key={key} url={x.url} favoriteClicked={props.favoriteClicked} favorites={props.favorites} />
     )}
   </tbody>
 )

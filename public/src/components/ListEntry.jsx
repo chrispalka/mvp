@@ -8,12 +8,12 @@ library.add(fas)
 const ListEntry = (props) => (
   <tr className="hover">
     <td className="star">
-    <FontAwesomeIcon icon={ props.favoriteClicked[props.name] ? ['fas', 'star'] : faStar } onClick={() => props.favorites(props.name)} />
+    <FontAwesomeIcon icon={ props.favoriteClicked[props.name] && props.favoriteClicked[props.name].status ? ['fas', 'star'] : faStar } onClick={() => props.favorites([props.name, props.highestBid, props.lastSale, props.url, props.media.thumbUrl])} />
       </td>
     <td><img height='50' src={props.media.thumbUrl}></img></td>
     <td>{props.name}</td>
-    <td>{props.highestbid}</td>
-    <td>{props.lastsale}</td>
+    <td>{props.highestBid}</td>
+    <td>{props.lastSale}</td>
   </tr>
 
 )
