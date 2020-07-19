@@ -11,8 +11,9 @@ class Main extends React.Component {
     super(props)
     this.state = {
       search: '',
-      results: [],
-      favorites: {},
+      searchResults: [],
+      favoriteResults: {},
+      savedFavorites: {},
       favoriteView: false
     }
   }
@@ -36,35 +37,49 @@ class Main extends React.Component {
       .then(res => res.json())
       .then(data => {
         const result = [];
-        const dataObj = {};
         data = data.productList
         data.forEach((x) => {
           result.push((({ name, url, highest_bid, last_sale, media }) => ({ name, url, highest_bid, last_sale, media }))(x))
         })
-        this.setState({ results: result })
+        this.setState({ searchResults: result })
       })
   }
 
   handleFavorite = (favorite) => {
+    const sneakerName = favorite[0];
+    const highestBid = favorite[1];
+    const lastSale = favorite[2];
+    const url = favorite[3];
+    const image = favorite[4];
+    console.log('url from handleFavorite: ', url)
+    console.log('image from handleFavorite: ', image)
     const data = new FormData();
-    const store = this.state.favorites;
-    if (store[favorite[0]] === undefined || store[favorite[0]].status === false) {
-      store[favorite[0]] = {
+    const favoriteStore = this.state.favoriteResults;
+    const savedFavorites = this.state.savedFavorites
+    if (favoriteStore[sneakerName] === undefined || favoriteStore[sneakerName].status === false) {
+      console.log('Shoe does not exist in favoriteStore.. Settings status true')
+      favoriteStore[sneakerName] = {
         status: true,
-        highestBid: favorite[1],
-        lastSale: favorite[2],
-        url: favorite[3],
-        media: favorite[4],
+        highestBid: highestBid,
+        lastSale: lastSale,
+        url: url,
+        media: image,
         username: this.props.username
       };
-      this.setState(store);
+      savedFavorites[sneakerName] = true;
+      this.setState(favoriteStore);
+      this.setState(savedFavorites);
     } else {
-      store[favorite[0]].status = false;
-      this.setState(store);
+      console.log('Shoe exists in favoriteStore.. Settings status false')
+      favoriteStore[sneakerName].status = false;
+      favoriteStore[sneakerName].username = this.props.username;
+      savedFavorites[sneakerName] = false;
+      this.setState(favoriteStore);
+      this.setState(savedFavorites);
     }
-    data.append('name', favorite[0])
-    for (var k in store[favorite[0]]) {
-      data.append(k, store[favorite[0]][k])
+    data.append('name', sneakerName)
+    for (var k in favoriteStore[sneakerName]) {
+      data.append(k, favoriteStore[sneakerName][k])
     }
     fetch('/favorite', {
       method: 'POST',
@@ -73,17 +88,38 @@ class Main extends React.Component {
   }
 
   renderFavorites = () => {
+    const favoriteStore = this.state.favoriteResults;
+    const savedFavorites = this.state.savedFavorites;
+    const data = new FormData();
+    const results = [];
+    const dataObj = {}
+    data.append('name', this.props.username);
+    fetch('/renderfavorite', {
+      method: 'POST',
+      body: data
+    })
+      .then(res => res.json())
+      .then(data => {
+        for (var i = 0; i < data.result.length; i++) {
+          let currentItem = data.result[i]
+          favoriteStore[currentItem.name] = {
+            status: true,
+            highestBid: currentItem.highestbid,
+            lastSale: currentItem.lastsale,
+            url: currentItem.url,
+            media: currentItem.media,
+          }
+            savedFavorites[currentItem.name] = true;
+        }
+        this.setState(savedFavorites);
+        this.setState(favoriteStore);
+      })
 
-    // place a get request for favorite data
-    // in server conditional in favorite endpoint if GET
-        // to query DB based on current user, send back data via JSON/promise
-        // pass data as props down to Favorites
-         // iterate over props and render into FavoritesEntry
+         // possibly add condition to render state if results < 1 ?? ** FOR IF NO FAVORITES SHOW "ADD FAVORITES??""
     this.setState(state => ({
       favoriteView: !this.state.favoriteView
     }));
   }
-
 
   render() {
     let h1;
@@ -112,7 +148,7 @@ class Main extends React.Component {
                 <th scope="col">Last Sale</th>
               </tr>
             </thead>
-              <List results={this.state.results} favoriteClicked={this.state.favorites} favorites={this.handleFavorite} />
+              <List searchResults={this.state.searchResults} favoriteResults={this.state.favoriteResults} handleFavorite={this.handleFavorite} />
           </table>
         </div>
       )
@@ -136,7 +172,7 @@ class Main extends React.Component {
                 <th scope="col">Last Sale</th>
               </tr>
             </thead>
-              <Favorites />
+              <Favorites favoriteResults={this.state.favoriteResults} savedFavorites={this.state.savedFavorites} handleFavorite={this.handleFavorite} />
           </table>
         </div>
       )

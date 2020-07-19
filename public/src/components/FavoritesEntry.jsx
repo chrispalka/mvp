@@ -5,17 +5,16 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faStar } from "@fortawesome/free-regular-svg-icons";
 library.add(fas)
 
-const ListEntry = (props) => (
+const FavoritesEntry = (props) => (
   <tr className="hover">
     <td className="star">
-    <FontAwesomeIcon icon={ props.favoriteResults[props.name] && props.favoriteResults[props.name].status ? ['fas', 'star'] : faStar } onClick={() => props.handleFavorite([props.name, props.highestBid, props.lastSale, props.url, props.media.thumbUrl])} />
+    <FontAwesomeIcon icon={ props.savedFavorites[props.name] === true ? ['fas', 'star'] : faStar } onClick={() => props.handleFavorite([props.name, props.highestBid, props.lastSale, props.url, props.media])} />
       </td>
-    <td><img height='50' src={props.media.thumbUrl}></img></td>
+    <td><img height='50' src={props.media}></img></td>
     <td>{props.name}</td>
     <td>{props.highestBid}</td>
     <td>{props.lastSale}</td>
   </tr>
-
 )
 
-export default ListEntry;
+export default FavoritesEntry;

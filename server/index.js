@@ -39,7 +39,7 @@ app.post('/search', upload.none(), (req, res) => {
   (async () => {
     try {
       const productList = await stockX.newSearchProducts(search, {
-        limit: 5
+        limit: 20
       });
       res.set(headers);
       res.status(200).json({ productList })
@@ -50,9 +50,18 @@ app.post('/search', upload.none(), (req, res) => {
   })();
 });
 
+app.post('/renderfavorite', upload.none(), (req, res) => {
+  let currentuser = req.body.name
+  console.log('currentuser: ', currentuser)
+  insertRow(`SELECT * FROM FAVORITES WHERE user_id = (SELECT id FROM users WHERE username = '${currentuser}' )`, (result) => {
+    result = JSON.parse(JSON.stringify(result));
+    res.set(headers);
+    res.status(200).json({ result })
+  })
+});
+
 app.post('/favorite', upload.none(), (req, res) => {
   let favorite = JSON.parse(JSON.stringify(req.body));
-  console.log('Incoming Favorite: ', typeof favorite.status)
   let username = favorite.username
   if (favorite.status === 'true') {
     console.log('****Entry!!****')
