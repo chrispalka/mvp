@@ -3,7 +3,11 @@ import ReactDOM from "react-dom";
 import List from './List.jsx';
 import Favorites from './Favorites.jsx'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from '@fortawesome/fontawesome-svg-core'
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+
 
 
 class Main extends React.Component {
@@ -69,22 +73,30 @@ class Main extends React.Component {
       savedFavorites[sneakerName] = true;
       this.setState(favoriteStore);
       this.setState(savedFavorites);
+      data.append('name', sneakerName)
+      for (var k in favoriteStore[sneakerName]) {
+        data.append(k, favoriteStore[sneakerName][k])
+      }
+      fetch('/favorite', {
+        method: 'POST',
+        body: data
+      })
     } else {
       console.log('Shoe exists in favoriteStore.. Settings status false')
       favoriteStore[sneakerName].status = false;
       favoriteStore[sneakerName].username = this.props.username;
       savedFavorites[sneakerName] = false;
-      this.setState(favoriteStore);
       this.setState(savedFavorites);
+      data.append('name', sneakerName)
+      for (var k in favoriteStore[sneakerName]) {
+        data.append(k, favoriteStore[sneakerName][k])
+      }
+      fetch('/favorite', {
+        method: 'POST',
+        body: data
+      })
+      delete favoriteStore[sneakerName]
     }
-    data.append('name', sneakerName)
-    for (var k in favoriteStore[sneakerName]) {
-      data.append(k, favoriteStore[sneakerName][k])
-    }
-    fetch('/favorite', {
-      method: 'POST',
-      body: data
-    })
   }
 
   renderFavorites = () => {
@@ -109,13 +121,11 @@ class Main extends React.Component {
             url: currentItem.url,
             media: currentItem.media,
           }
-            savedFavorites[currentItem.name] = true;
+          savedFavorites[currentItem.name] = true;
         }
         this.setState(savedFavorites);
         this.setState(favoriteStore);
       })
-
-         // possibly add condition to render state if results < 1 ?? ** FOR IF NO FAVORITES SHOW "ADD FAVORITES??""
     this.setState(state => ({
       favoriteView: !this.state.favoriteView
     }));
@@ -148,20 +158,15 @@ class Main extends React.Component {
                 <th scope="col">Last Sale</th>
               </tr>
             </thead>
-              <List searchResults={this.state.searchResults} favoriteResults={this.state.favoriteResults} handleFavorite={this.handleFavorite} />
+            <List searchResults={this.state.searchResults} favoriteResults={this.state.favoriteResults} handleFavorite={this.handleFavorite} />
           </table>
         </div>
       )
-    } else {
+    } else if (!Object.entries(this.state.favoriteResults).length < 1) {
       return (
         <div className="container">
           {h1}
-          <span className="favorite"><FontAwesomeIcon icon={faStar} onClick={this.renderFavorites} /></span>
-          <form onSubmit={this.handleSearch}>
-            <div className="form-group">
-              <input type="text" className="form-control" name="search" value={this.state.search} onChange={this.onChange} placeholder="Lets find some sneakers!"></input>
-            </div>
-          </form>
+          <span className="favorite"><FontAwesomeIcon icon={['fas', 'home']} onClick={this.renderFavorites} /></span>
           <table className="table table-striped table-dark">
             <thead>
               <tr>
@@ -172,8 +177,16 @@ class Main extends React.Component {
                 <th scope="col">Last Sale</th>
               </tr>
             </thead>
-              <Favorites favoriteResults={this.state.favoriteResults} savedFavorites={this.state.savedFavorites} handleFavorite={this.handleFavorite} />
+            <Favorites favoriteResults={this.state.favoriteResults} savedFavorites={this.state.savedFavorites} handleFavorite={this.handleFavorite} />
           </table>
+        </div>
+      )
+    } else {
+      return (
+        <div className="container">
+          {h1}
+          <span className="favorite"><FontAwesomeIcon icon={['fas', 'home']} onClick={this.renderFavorites} /></span>
+          <h3>Come back when you have added some favorites!</h3>
         </div>
       )
     }
